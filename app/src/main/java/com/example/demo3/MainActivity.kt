@@ -95,12 +95,12 @@ class MainActivity : AppCompatActivity() {
         val dataList = ArrayList<HashMap<String, Any>>()
         val titles = arrayOf("Lion", "Tiger", "Monkey", "Dog", "Cat", "Elephant")
         val icons = intArrayOf(
-            android.R.drawable.ic_dialog_info,
-            android.R.drawable.ic_dialog_email,
-            android.R.drawable.ic_dialog_alert,
-            android.R.drawable.ic_dialog_map,
-            android.R.drawable.ic_dialog_dialer,
-            android.R.drawable.ic_dialog_info
+            R.drawable.lion,      // Lion 的图片
+            R.drawable.tiger,     // Tiger 的图片
+            R.drawable.monkey,    // Monkey 的图片
+            R.drawable.dog,       // Dog 的图片
+            R.drawable.cat,       // Cat 的图片
+            R.drawable.elephant   // Elephant 的图片
         )
 
         for (i in titles.indices) {
