@@ -4,10 +4,13 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.*
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var listView: ListView
     private lateinit var selectedItemButton: Button
     private lateinit var btnShowCustomDialog: Button
+    private lateinit var tvTestContent: TextView
 
     // 权限请求启动器
     private val requestPermissionLauncher = registerForActivityResult(
@@ -40,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
+        supportActionBar?.setDisplayShowTitleEnabled(true)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -53,7 +58,52 @@ class MainActivity : AppCompatActivity() {
 
         requestNotificationPermission()
     }
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
 
+    // 处理菜单项点击事件
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            // 字体大小 - 小
+            R.id.menu_font_small -> {
+                tvTestContent.textSize = 10f
+                Toast.makeText(this, "已设置为小号字体", Toast.LENGTH_SHORT).show()
+                return true
+            }
+            // 字体大小 - 中
+            R.id.menu_font_medium -> {
+                tvTestContent.textSize = 16f
+                Toast.makeText(this, "已设置为中号字体", Toast.LENGTH_SHORT).show()
+                return true
+            }
+            // 字体大小 - 大
+            R.id.menu_font_large -> {
+                tvTestContent.textSize = 20f
+                Toast.makeText(this, "已设置为大号字体", Toast.LENGTH_SHORT).show()
+                return true
+            }
+            // 普通菜单项
+            R.id.menu_normal -> {
+                Toast.makeText(this, "你点击了普通菜单项", Toast.LENGTH_SHORT).show()
+                return true
+            }
+            // 字体颜色 - 红色
+            R.id.menu_color_red -> {
+                tvTestContent.setTextColor(Color.RED)
+                Toast.makeText(this, "已设置为红色", Toast.LENGTH_SHORT).show()
+                return true
+            }
+            // 字体颜色 - 黑色
+            R.id.menu_color_black -> {
+                tvTestContent.setTextColor(Color.BLACK)
+                Toast.makeText(this, "已设置为黑色", Toast.LENGTH_SHORT).show()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
     private fun requestNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             when {
@@ -95,8 +145,8 @@ class MainActivity : AppCompatActivity() {
     private fun initViews() {
         listView = findViewById(R.id.listView)
         selectedItemButton = findViewById(R.id.selectedItemButton)
-        // 初始化对话框按钮
         btnShowCustomDialog = findViewById(R.id.btnShowCustomDialog)
+        tvTestContent = findViewById(R.id.tvTestContent)
 
         val dataList = ArrayList<HashMap<String, Any>>()
         val titles = arrayOf("Lion", "Tiger", "Monkey", "Dog", "Cat", "Elephant")
@@ -140,7 +190,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnShowCustomDialog.setOnClickListener {
-           Log.d("MainActivity", "显示对话框")
+            Log.d("MainActivity", "显示对话框")
             Toast.makeText(this, "显示对话框", Toast.LENGTH_SHORT).show()
             showCustomDialog()
         }

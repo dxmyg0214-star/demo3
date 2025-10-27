@@ -8,6 +8,17 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <!-- 添加测试文本 -->
+    <TextView
+        android:id="@+id/tvTestContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="用于测试的内容"
+        android:textSize="16sp"
+        android:padding="16dp"
+        android:gravity="center"
+        android:textColor="@android:color/black" />
+
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
@@ -21,7 +32,7 @@
         android:text="未选择任何项"
         android:textSize="16sp"
         android:padding="16dp" />
-    <!-- 添加触发自定义对话框的按钮 -->
+
     <Button
         android:id="@+id/btnShowCustomDialog"
         android:layout_width="match_parent"
