@@ -7,9 +7,11 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.*
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -21,6 +23,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var listView: ListView
     private lateinit var selectedItemButton: Button
+    private lateinit var btnShowCustomDialog: Button
 
     // 权限请求启动器
     private val requestPermissionLauncher = registerForActivityResult(
@@ -58,7 +61,7 @@ class MainActivity : AppCompatActivity() {
                     this,
                     android.Manifest.permission.POST_NOTIFICATIONS
                 ) == PackageManager.PERMISSION_GRANTED -> {
-
+                    // 权限已授予
                 }
                 ActivityCompat.shouldShowRequestPermissionRationale(
                     this,
@@ -89,8 +92,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initViews() {    listView = findViewById(R.id.listView)
+    private fun initViews() {
+        listView = findViewById(R.id.listView)
         selectedItemButton = findViewById(R.id.selectedItemButton)
+        // 初始化对话框按钮
+        btnShowCustomDialog = findViewById(R.id.btnShowCustomDialog)
 
         val dataList = ArrayList<HashMap<String, Any>>()
         val titles = arrayOf("Lion", "Tiger", "Monkey", "Dog", "Cat", "Elephant")
@@ -132,10 +138,61 @@ class MainActivity : AppCompatActivity() {
 
             sendNotification(selectedItem)
         }
+
+        btnShowCustomDialog.setOnClickListener {
+           Log.d("MainActivity", "显示对话框")
+            Toast.makeText(this, "显示对话框", Toast.LENGTH_SHORT).show()
+            showCustomDialog()
+        }
+    }
+
+    // 显示自定义对话框
+    private fun showCustomDialog() {
+        Log.d("MainActivity", "showCustomDialog 方法被调用")
+        Toast.makeText(this, "正在显示对话框", Toast.LENGTH_SHORT).show()
+
+        try {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("登录")
+
+            val dialogView = layoutInflater.inflate(R.layout.custom_dialog, null)
+            builder.setView(dialogView)
+
+            val etUsername = dialogView.findViewById<EditText>(R.id.etUsername)
+            val etPassword = dialogView.findViewById<EditText>(R.id.etPassword)
+            val btnConfirm = dialogView.findViewById<Button>(R.id.btnConfirm)
+            val btnCancel = dialogView.findViewById<Button>(R.id.btnCancel)
+
+            // 创建对话框
+            val dialog = builder.create()
+
+            btnConfirm.setOnClickListener {
+                val username = etUsername.text.toString()
+                val password = etPassword.text.toString()
+
+                if (username.isNotEmpty() && password.isNotEmpty()) {
+                    Toast.makeText(this, "用户名: $username, 密码: $password", Toast.LENGTH_SHORT).show()
+                    dialog.dismiss()
+                } else {
+                    Toast.makeText(this, "请输入用户名和密码", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            btnCancel.setOnClickListener {
+                Toast.makeText(this, "已取消", Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+            }
+
+            dialog.show()
+            Log.d("MainActivity", "对话框已显示")
+
+        } catch (e: Exception) {
+            Log.e("MainActivity", "显示对话框时出错: ${e.message}")
+            Toast.makeText(this, "显示对话框时出错: ${e.message}", Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun sendNotification(itemContent: String) {
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(
                     this,

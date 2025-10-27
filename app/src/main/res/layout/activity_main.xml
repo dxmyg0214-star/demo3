@@ -21,5 +21,14 @@
         android:text="未选择任何项"
         android:textSize="16sp"
         android:padding="16dp" />
+    <!-- 添加触发自定义对话框的按钮 -->
+    <Button
+        android:id="@+id/btnShowCustomDialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="显示自定义对话框"
+        android:textSize="16sp"
+        android:padding="16dp"
+        android:background="@android:color/holo_green_light" />
 
 </LinearLayout>
