@@ -31,13 +31,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnShowCustomDialog: Button
     private lateinit var tvTestContent: TextView
 
-    // 新增变量：用于跟踪当前的 ActionMode 和选中的列表项
     private var currentActionMode: ActionMode? = null
-    private val selectedItems = LinkedList<Int>() // 存储选中项的位置
+    private val selectedItems = LinkedList<Int>()
 
-    // 新增：实现 ActionMode.Callback 接口
+
     private val actionModeCallback = object : ActionMode.Callback {
-        // 当 ActionMode 创建时调用（这里填充我们的菜单）
+
         override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
             mode?.let {
                 menuInflater.inflate(R.menu.context_menu, menu)
@@ -46,40 +45,33 @@ class MainActivity : AppCompatActivity() {
             return true
         }
 
-        // 在创建后准备显示前调用
         override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
-            return false // 返回 false 表示不需要重新创建
+            return false
         }
 
-        // 当用户点击上下文操作栏上的菜单项时调用
         override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
             return when (item?.itemId) {
                 R.id.menu_delete -> {
-                    // 处理删除逻辑
                     deleteSelectedItems()
-                    mode?.finish() // 操作完成后结束 ActionMode
+                    mode?.finish()
                     true
                 }
                 R.id.menu_select_all -> {
-                    // 处理全选逻辑
                     selectAllItems()
-                    mode?.invalidate() // 更新 ActionMode 的UI
+                    mode?.invalidate()
                     true
                 }
                 else -> false
             }
         }
 
-        // 当用户退出 ActionMode 时调用
         override fun onDestroyActionMode(mode: ActionMode?) {
-            // 清理选中状态
             selectedItems.clear()
             updateListViewSelection()
             currentActionMode = null
         }
     }
 
-    // 权限请求启动器
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
@@ -95,7 +87,6 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
-        // 移除 Toolbar 相关代码
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -232,13 +223,11 @@ class MainActivity : AppCompatActivity() {
 
         // 设置点击事件
         listView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-            // 如果正在 ActionMode 中，则处理选中/取消选中
             if (currentActionMode != null) {
                 toggleSelection(position)
             } else {
                 val selectedItem = dataList[position]["title"] as String
 
-                // 更新按钮文字
                 selectedItemButton.text = selectedItem
 
                 Toast.makeText(this@MainActivity, "你选择了: $selectedItem", Toast.LENGTH_SHORT).show()
@@ -247,14 +236,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // 设置列表项的长按监听器以启动上下文操作模式
         listView.onItemLongClickListener = AdapterView.OnItemLongClickListener { parent, view, position, id ->
             if (currentActionMode == null) {
-                // 启动新的 ActionMode
                 currentActionMode = startActionMode(actionModeCallback)
             }
-            toggleSelection(position) // 切换该项的选中状态
-            true // 返回 true 表示消费了长按事件
+            toggleSelection(position)
+            true
         }
 
         btnShowCustomDialog.setOnClickListener {
@@ -264,7 +251,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // 新增：切换列表项选中状态的辅助方法
     private fun toggleSelection(position: Int) {
         if (selectedItems.contains(position)) {
             selectedItems.remove(position)
@@ -273,18 +259,15 @@ class MainActivity : AppCompatActivity() {
         }
         updateListViewSelection()
 
-        // 更新 ActionMode 标题
         currentActionMode?.title = "${selectedItems.size} selected"
 
-        // 如果没有选中的项，则结束 ActionMode
         if (selectedItems.isEmpty()) {
             currentActionMode?.finish()
         }
     }
 
-    // 修复：更新列表视图的选中状态（视觉反馈）
+
     private fun updateListViewSelection() {
-        // 获取当前可见的列表项范围
         val firstVisiblePosition = listView.firstVisiblePosition
         val lastVisiblePosition = listView.lastVisiblePosition
 
@@ -300,15 +283,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // 新增：删除选中的项
+
     private fun deleteSelectedItems() {
         if (selectedItems.isNotEmpty()) {
             Toast.makeText(this, "删除 ${selectedItems.size} 个选项", Toast.LENGTH_SHORT).show()
-            // 注意：在实际应用中，你需要在这里更新你的数据列表并通知适配器
+
         }
     }
 
-    // 新增：全选项
     private fun selectAllItems() {
         selectedItems.clear()
         for (i in 0 until listView.count) {
@@ -318,7 +300,7 @@ class MainActivity : AppCompatActivity() {
         currentActionMode?.title = "${selectedItems.size} selected"
     }
 
-    // 显示自定义对话框
+
     private fun showCustomDialog() {
         Log.d("MainActivity", "showCustomDialog 方法被调用")
         Toast.makeText(this, "正在显示对话框", Toast.LENGTH_SHORT).show()
