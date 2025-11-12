@@ -1,5 +1,5 @@
 实验报告
-课程   移动软件应用开发     实验名称    Android界面布局实验
+课程   移动软件应用开发     实验名称    Android界面组件实验
 
 专业___软件工程____________班级___2班 ______  学号__121052023072___  姓名 李承焕
 
@@ -38,6 +38,7 @@ Android studio
 
 ![renwu4image2.png](app/src/main/res/runimage/renwu4image2.png)
 五、总结
+
 本次实验主要完成了Android开发中常用的四种界面组件的实现和使用，包括ListView、自定义AlertDialog、XML菜单和上下文操作
 模式。
 通过这四个任务，深入理解了Android界面组件的基本用法和高级功能。通过本次实验，全面掌握了Android开发中常用的界面组件
